@@ -1,56 +1,24 @@
-trigger:
-- master
-stages:
-- stage: Build
-  jobs:
-  - job: Build
-    pool:
-      vmImage: 'windows-latest'
-
-    variables:
-      solution: '**/*.sln'
-      buildPlatform: 'Any CPU'
-      buildConfiguration: 'Release'
-
-    steps:
-    - task: NuGetToolInstaller@1
-
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
-
-    - task: VSTest@2
-      inputs:
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-- stage: Deploy
-  jobs:
-  - job: Deploy
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: DownloadBuildArtifacts@0
-      inputs:
-        buildType: 'current'
-        downloadType: 'single'
-        artifactName: 'drop'
-        downloadPath: '$(System.ArtifactsDirectory)'
-    - task: AzureRmWebAppDeployment@4
-      inputs:
-        ConnectionType: 'AzureRM'
-        azureSubscription: 'SMT-SUB001 (aa748e82-e0df-42e3-ac20-f30b6a5077e0)'
-        appType: 'webApp'
-        WebAppName: 'testwebappqasdfasf7654'
-        packageForLinux: '$(System.ArtifactsDirectory)/drop/*.zip'
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "myFirstAzureWebApp", "myFirstAzureWebApp\myFirstAzureWebApp.csproj", "{F0D23F7F-3E4E-494C-BF3F-C8EA869036FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F0D23F7F-3E4E-494C-BF3F-C8EA869036FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0D23F7F-3E4E-494C-BF3F-C8EA869036FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0D23F7F-3E4E-494C-BF3F-C8EA869036FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0D23F7F-3E4E-494C-BF3F-C8EA869036FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8FD18FB-E3CD-4191-856E-EBB45768C273}
+	EndGlobalSection
+EndGlobal
